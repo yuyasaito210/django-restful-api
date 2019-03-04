@@ -8,7 +8,7 @@ WORKDIR /usr/src/shiptalent_frontend
 
 COPY . .
 
-RUN yum install zlib1g-dev libjpeg-dev
+RUN sudo apt-get install zlib1g-dev libjpeg-dev
 RUN python3.6 -m venv env3
 RUN source env3/bin/activate
 RUN pip install -r requirements.txt
