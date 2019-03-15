@@ -1,13 +1,38 @@
+# The first instruction is what image we want to base our container on
+# We Use an official Python runtime as a parent image
 FROM python:3.6
-ENV PYTHONUNBUFFERED 1  
 
-RUN apk update && \
-    apk add --virtual build-deps gcc python-dev musl-dev && \
-    apk add postgresql-dev bash \
-    apk add zlib1g-dev libjpeg-dev
+ENV PYTHONUNBUFFERED 1
 
-RUN mkdir /config  
-ADD /config/requirements.txt /config/  
-RUN pip install -r /config/requirements.txt
-RUN mkdir /src
-WORKDIR /src
+# Setup Ubuntu linux
+RUN export LANGUAGE="en_US.UTF-8"
+RUN apt-get update 
+RUN apt-get -y install build-essential curl libssl-dev libffi-dev zlib1g-dev libjpeg-dev checkinstall
+RUN apt-get install imagemagick
+
+RUN mkdir -p /usr/src/shiptalent_backend
+
+WORKDIR /usr/src/shiptalent_backend
+
+COPY requirements.txt /usr/src/shiptalent_backend/
+
+RUN pip install -r /usr/src/shiptalent_backend/requirements.txt 
+
+COPY . /usr/src/shiptalent_backend/
+
+RUN mkdir -p /usr/src/shiptalent_backend/static_backend
+RUN mkdir -p /usr/src/shiptalent_backend/static_backend/js
+RUN mkdir -p /usr/src/shiptalent_backend/static_backend/css
+RUN mkdir -p /usr/src/shiptalent_backend/static_backend/fonts
+RUN mkdir -p /usr/src/shiptalent_backend/static_backend/images
+RUN mkdir -p /usr/src/shiptalent_backend/static_backend/rest_framework
+RUN mkdir -p /usr/src/shiptalent_backend/static_backend/rest_framework_swagger
+RUN ls /usr/src/shiptalent_backend 
+
+RUN python /usr/src/shiptalent_backend/manage.py collectstatic --noinput
+RUN python /usr/src/shiptalent_backend/manage.py makemigrations 
+RUN python /usr/src/shiptalent_backend/manage.py migrate
+
+EXPOSE 8000
+
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

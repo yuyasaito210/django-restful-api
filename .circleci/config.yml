@@ -1,0 +1,87 @@
+# Python CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-python/ for more details
+#
+version: 2
+jobs:
+  build:
+    docker:
+      - image: $DOCKER_REPOSITORY:predefined
+        auth:
+          username: $MY_DOCKERHUB_USER
+          password: $MY_DOCKERHUB_PASSWORD
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "requirements.txt" }}
+            # fallback to using the latest cache if no exact match is found
+            # - v1-dependencies-
+
+      - run:
+          name: install dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+
+      - save_cache:
+          paths:
+            - ./venv
+          key: v1-dependencies-{{ checksum "requirements.txt" }}
+
+      # run tests!
+      # this example uses Django's built-in test-runner
+      # other common Python testing frameworks include pytest and nose
+      # https://pytest.org
+      # https://nose.readthedocs.io
+      # - run:
+      #     name: run tests
+      #     command: |
+      #       . venv/bin/activate
+      #       python manage.py test
+
+      # - store_artifacts:
+      #     path: test-reports
+      #     destination: test-reports
+
+version: 2.1
+jobs:
+  build:
+    docker:
+      - image: $DOCKER_REPOSITORY:predefined
+        auth:
+          username: $MY_DOCKERHUB_USER
+          password: $MY_DOCKERHUB_PASSWORD
+
+    steps:
+      - checkout
+      - run: yarn install
+      # - run: npm run build
+
+  deploy:
+    machine:
+      enabled: true
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - $TARGET_SERVER_SSH_FINGERPRINT
+      - run:
+          name: Deploy app from docker repository to server
+          command: |
+            ssh -o StrictHostKeyChecking=no $TARGET_SERVER_USER_NAME@$TARGET_SERVER_ADDRESS "/bin/bash $DEPLOYMENT_SCRIPT_FILE_PATH $MY_DOCKERHUB_USER $MY_DOCKERHUB_PASSWORD $DOCKER_REPOSITORY:$DOCKER_REPOSITORY_TAG"
+
+workflows:
+  version: 2.1
+  build-and-deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master

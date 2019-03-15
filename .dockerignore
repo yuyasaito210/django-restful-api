@@ -1,3 +1,10 @@
-media
 static
 static_backend
+.media
+.vscode
+.idea
+*.pdf
+env
+env3
+.tox
+*.pyc
