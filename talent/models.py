@@ -103,12 +103,16 @@ class Talent(models.Model):
         This string is used when a `Talent` is printed in the console.
         """
         return "{talent_id}, {user_name}, {email}".format(
-                        talent_id=self.id,
-                        user_name=self.user.username,
-                        email=self.user.email)
+                    talent_id=self.id,
+                    user_name=self.user.username,
+                    email=self.user.email
+                )
 
     def get_average_rating(self):
-        return self.talent_ratings.aggregate(Avg('rating'))['rating__avg']
+        average = self.talent_ratings.aggregate(Avg('rating'))['rating__avg']
+        if average :
+            return round(self.talent_ratings.aggregate(Avg('rating'))['rating__avg'], 2)
+        return 0
 
     def get_is_completed_contact_info(self):
         return not self.user.first_name and not self.user.last_name and not self.phone_number and not self.sex and \

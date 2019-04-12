@@ -57,6 +57,7 @@ THIRD_PARTY_APPS = (
 
 LOCAL_APPS = (
     'authentication',
+    'utils',
     'shiptalent_info',
     'talent',
     'position_type',
@@ -96,7 +97,9 @@ LOCAL_APPS = (
     'client_feedback',
     'client_request',
     'agency',
-    'user_note'
+    'user_note',
+    'talent_medical_upload'
+    
 )
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

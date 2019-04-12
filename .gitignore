@@ -5,7 +5,7 @@ env3
 db.sqlite3
 build
 logs
-talent_picture/config_aws.py
+config/config_aws.py
 .idea
 media
 static

@@ -3,7 +3,7 @@ from django.http import Http404
 from rest_framework import permissions, status, authentication
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .config_aws import (
+from config.config_aws import (
     AWS_UPLOAD_BUCKET,
     AWS_UPLOAD_REGION,
     AWS_UPLOAD_ACCESS_KEY_ID,
