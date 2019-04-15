@@ -16,8 +16,12 @@ class CastingRequestTalentSerializer(serializers.ModelSerializer):
             'talent',
             'rehearsal_wage',
             'performance_wage',
+            'gross_wage',
+            'commission',
+            'balance',
             'comment',
-            'created'
+            'created',
+            'updated'
         )
 
 

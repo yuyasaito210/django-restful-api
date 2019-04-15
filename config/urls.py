@@ -95,4 +95,5 @@ urlpatterns = [
   url(r'^api/v1/agency/casting_request_talent/', include('agency.casting_request_talent_urls')),
   url(r'^api/v1/agency/user_note/', include('user_note.urls')),
   url(r'^api/v1/agency/talent_medical_upload/', include('talent_medical_upload.urls')),
+  url(r'^api/v1/agency/invoice/', include('agency.invoice_urls')),
 ]
