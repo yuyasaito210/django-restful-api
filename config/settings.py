@@ -98,8 +98,8 @@ LOCAL_APPS = (
     'client_request',
     'agency',
     'user_note',
-    'talent_medical_upload'
-    
+    'talent_medical_upload',
+    'invoice'
 )
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

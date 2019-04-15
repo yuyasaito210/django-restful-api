@@ -11,8 +11,12 @@ class CastingRequestTalentAdmin(admin.ModelAdmin):
         'talent_display',
         'rehearsal_wage',
         'performance_wage',
+        'gross_wage',
+        'commission',
+        'balance',
         'comment',
-        'created'
+        'created',
+        'updated'
     )
     list_display_links = (
         'id',
@@ -20,8 +24,12 @@ class CastingRequestTalentAdmin(admin.ModelAdmin):
         'talent_display',
         'rehearsal_wage',
         'performance_wage',
+        'gross_wage',
+        'commission',
+        'balance',
         'comment',
-        'created'
+        'created',
+        'updated'
     )
     list_per_page = 25
 
@@ -36,4 +44,3 @@ class CastingRequestTalentAdmin(admin.ModelAdmin):
         )
 
     casting_request_display.short_description = 'Casting Request'
-    # talents_display.short_description = 'Talents'

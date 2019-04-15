@@ -15,10 +15,14 @@ class CastingRequestTalent(models.Model):
         related_name='talent_casting_requests',
         on_delete=models.CASCADE
     )
-    rehearsal_wage = models.IntegerField(blank=True, default=0)
-    performance_wage = models.IntegerField(blank=True, default=0)
+    rehearsal_wage = models.FloatField(blank=True, default=0.0)
+    performance_wage = models.FloatField(blank=True, default=0.0)
+    gross_wage = models.FloatField(blank=True, default=0.0)
+    commission = models.FloatField(blank=True, default=0.0)
+    balance = models.FloatField(blank=True, default=0.0)
     comment = models.TextField(blank=True, default='')
     created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         """
