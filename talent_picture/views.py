@@ -16,6 +16,7 @@ from talent.models import Talent
 from authentication.models import User
 from user_note.models import UserNoteManager
 import boto
+from boto.s3.connection import S3Connection, Bucket, Key
 import mimetypes
 import json
 import time
@@ -58,7 +59,7 @@ class TalentPicturePolicy(APIView):
         user_id = talent.user.username
         # Find current talent picture with caption
         talent_pictures = TalentPicture.objects.filter(talent=talent.id).filter(caption=caption)
-        print('==== find talent_pictures: ', talent_pictures)
+        
         if len(talent_pictures) > 0:
             talent_picture = talent_pictures[0]
         else:
@@ -70,12 +71,11 @@ class TalentPicturePolicy(APIView):
 
         upload_start_path = "{images_path}/{talent_id}/".format(
                 images_path=AWS_UPLOAD_IMAGES_PATH,
-                talent_id=talent_id,
-                talent_picture_id=talent_picture_id,
-                file_extension=file_extension
+                talent_id=talent_id
             )
-        filename_final = "{talent_picture_id}{file_extension}".format(
+        filename_final = "{talent_picture_id}_{current_date_time}{file_extension}".format(
                 talent_picture_id=talent_picture_id,
+                current_date_time= time.strftime('%Y%m%d%H%M%S', time.localtime()),
                 file_extension=file_extension
             )
 
@@ -96,21 +96,31 @@ class TalentPicturePolicy(APIView):
             "PUT",
             AWS_UPLOAD_BUCKET,
             final_upload_path,
-            headers = {'Content-Type': content_type, 'x-amz-acl':'public-read'})
+            headers = {'Content-Type': content_type, 'x-amz-acl':'public-read'}
+        )
 
         upload_url = "https://{bucket_name}.s3.amazonaws.com/{final_upload_path}".format(
                 bucket_name=AWS_UPLOAD_BUCKET,
                 final_upload_path=final_upload_path
             )
         if object_name and file_extension:
-            """
-            Save the eventual path to the Django-stored TalentPicture instance
-            """
+            # Remove previouse image url from AWS S3
+            # if talent_picture.url:
+            #     print('==== removing previous image from AWS S3')
+            #     conn = S3Connection(AWS_UPLOAD_ACCESS_KEY_ID, AWS_UPLOAD_SECRET_KEY)
+            #     bucket = Bucket(conn, AWS_UPLOAD_BUCKET)
+            #     k = Key(bucket=bucket, name=talent_picture.url)
+            #     k.delete()
+            #     print('==== removed')
+
+            # Save the eventual path to the Django-stored TalentPicture instance
             talent_picture.path = final_upload_path
             talent_picture.url = upload_url
             talent_picture.caption = caption
             talent_picture.priority = priority
             talent_picture.save()
+ 
+
 
         data = {
             'signedUrl': signed_url,

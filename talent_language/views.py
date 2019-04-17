@@ -1,5 +1,4 @@
 from django.shortcuts import render
-
 from talent_language.models import TalentLanguage
 from talent_language.serializers import TalentLanguageSerializer
 from talent.models import Talent
@@ -8,6 +7,8 @@ from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from drf_yasg.utils import swagger_auto_schema
+
 
 class TalentLanguageList(APIView):
     def get_object(self, pk):
@@ -32,6 +33,7 @@ class TalentLanguageList(APIView):
     """
     Reset all languages of a user.
     """
+    @swagger_auto_schema(request_body=TalentLanguageSerializer(many=True), responses={200: TalentLanguageSerializer(many=True)})
     def post(self, request, pk, format=None):
         talent = self.get_object(pk)
         data = request.data['talent_languages']
@@ -48,5 +50,7 @@ class TalentLanguageList(APIView):
                     fluency=language['fluency']
                 )
             talent_language.save()
+        
+        serializer = TalentLanguageSerializer(talent_languages, many=True)
 
-        return Response(status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
