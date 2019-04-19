@@ -89,7 +89,7 @@ class CastingRequestDetail(APIView):
 
         casting_request.delete()
 
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({'id': int(pk)}, status=status.HTTP_200_OK)
 
 
 class CastingRequestSetStatus(APIView):

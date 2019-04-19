@@ -237,4 +237,4 @@ class TalentPictureDetail(APIView):
             
             UserNoteManager.profile_logger(None, user, talent_user, note, talent_picture_item)
             
-        return Response({'id': pk}, status=status.HTTP_204_NO_CONTENT)
+        return Response({'id': int(pk)}, status=status.HTTP_200_OK)

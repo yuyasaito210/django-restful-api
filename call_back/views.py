@@ -82,10 +82,12 @@ class CallBackCreate(APIView):
         talent_id = request.data['talent']
         callback = CallBack.objects.filter(client_id=client, talent_id=talent_id).first();
         if callback:
-            return Response(
-                        {'error': {"talent": ["this talent already exists."]}},
-                        status=status.HTTP_400_BAD_REQUEST
-                    )
+            new_serializer = CallBackCreateSerializer(callback, many=False)
+            # return Response(
+            #             {'error': {"talent": ["this talent already exists."]}},
+            #             status=status.HTTP_400_BAD_REQUEST
+            #         )
+            return Response(new_serializer.data, status=status.HTTP_201_CREATED)
 
         serializer = CallBackCreateSerializer(data=request.data, many=False)
         if serializer.is_valid():

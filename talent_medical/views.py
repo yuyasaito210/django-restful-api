@@ -8,6 +8,8 @@ from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from drf_yasg.utils import swagger_auto_schema
+
 
 class TalentMedicalList(APIView):
     def get_object(self, pk):
@@ -20,6 +22,7 @@ class TalentMedicalList(APIView):
     """
     List all condition_titles of a user.
     """
+    @swagger_auto_schema(responses={200: TalentMedicalSerializer(many=True)})
     def get(self, request, pk, format=None):
         try:
             talent = self.get_object(pk)
@@ -32,6 +35,7 @@ class TalentMedicalList(APIView):
     """
     Reset all medicals of a user.
     """
+    @swagger_auto_schema(request_body=TalentMedicalSerializer(many=True), responses={200: TalentMedicalSerializer(many=True)})
     def post(self, request, pk, format=None):
         talent = self.get_object(pk)
         data = request.data['talent_medicals']
@@ -49,4 +53,5 @@ class TalentMedicalList(APIView):
                 )
             talent_medical.save()
 
-        return Response(status=status.HTTP_201_CREATED)
+        serializer = TalentMedicalSerializer(talent_medicals, many=True)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)

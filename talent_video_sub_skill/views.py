@@ -245,7 +245,7 @@ class SubSkillVideoDetail(APIView):
 
         talent_sub_skill_video_item.delete()
 
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({'id': int(pk)}, status=status.HTTP_200_OK)
 
 
 class SubSkillVideoByID(APIView):

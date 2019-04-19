@@ -52,4 +52,4 @@ class SubmissionDetail(APIView):
     def delete(self, request, pk, format=None):
         submission_item = self.get_object(pk)
         submission_item.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({'id': int(pk)}, status=status.HTTP_200_OK)

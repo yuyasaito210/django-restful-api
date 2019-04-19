@@ -49,4 +49,4 @@ class PositionTypeDetail(APIView):
     def delete(self, request, pk, format=None):
         position_type_item = self.get_object(pk)
         position_type_item.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({'id': int(pk)}, status=status.HTTP_200_OK)
