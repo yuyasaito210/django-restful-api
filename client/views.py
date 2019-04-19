@@ -95,7 +95,7 @@ class ClientDetail(APIView):
     def delete(self, request, pk, format=None):
         client_item = self.get_object(pk)
         client_item.delete()
-        return Response({'id': int(pk)}, status=status.HTTP_204_NO_CONTENT)
+        return Response({'id': int(pk)}, status=status.HTTP_200_OK)
 
 
 class ClientFindTalentList(APIView):

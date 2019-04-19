@@ -273,13 +273,20 @@ class TalentDetail(APIView):
     def wrap_generate_tid(self, tid, object_list):
         new_tid = tid
         for object in object_list:
-            new_tid = "{tid}{prefix}".format(
-                tid=new_tid,
-                prefix=object.name[0]
-            )
+            print('==== object: ', object)
+            if 'name' in object:
+                new_tid = "{tid}{prefix}".format(
+                    tid=new_tid,
+                    prefix=object.name[0]
+                )
+            elif 'position_type' in object:
+                new_tid = "{tid}{prefix}".format(
+                    tid=new_tid,
+                    prefix=object['position_type']['name'][0]
+                )
         return new_tid
 
-    def generate_tid_by_list(self, talent, positions, sub_positions):
+    def generate_tid_by_list(self, talent, positions):
         tid = self.wrap_generate_tid('', positions)
 
         tid = "{tid}{talent_id}".format(
@@ -464,7 +471,7 @@ class TalentDetail(APIView):
     def delete(self, request, pk, format=None):
         talent_item = self.get_object(pk)
         talent_item.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({'id': int(pk)}, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(request_body=WizardTalentInfoSerializer, responses={200: WizardTalentInfoSerializer(many=False)})
     def post(self, request, pk, format=None):

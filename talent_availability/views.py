@@ -9,6 +9,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from dateutil.parser import parse
+from drf_yasg.utils import swagger_auto_schema
 
 class TalentAvailabilityList(APIView):
     def get_object(self, pk):
@@ -21,6 +22,7 @@ class TalentAvailabilityList(APIView):
     """
     List all condition_titles of a user.
     """
+    @swagger_auto_schema(responses={200: TalentAvailabilitySerializer(many=True)})
     def get(self, request, pk, format=None):
         try:
             talent = self.get_object(pk)
@@ -33,6 +35,7 @@ class TalentAvailabilityList(APIView):
     """
     Reset all availabilities of a user.
     """
+    @swagger_auto_schema(request_body=TalentAvailabilitySerializer(many=True), responses={201: TalentAvailabilitySerializer(many=True)})
     def post(self, request, pk, format=None):
         talent = self.get_object(pk)
         data = request.data['talent_availabilities']
@@ -48,5 +51,7 @@ class TalentAvailabilityList(APIView):
                     end_date=parse(availability['end_date'])
                 )
             talent_availability.save()
+        
+        serializer = TalentAvailabilitySerializer(talent_availabilities, many=True)
 
-        return Response(status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)

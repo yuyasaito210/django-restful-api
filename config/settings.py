@@ -57,7 +57,6 @@ THIRD_PARTY_APPS = (
 
 LOCAL_APPS = (
     'authentication',
-    'utils',
     'shiptalent_info',
     'talent',
     'position_type',

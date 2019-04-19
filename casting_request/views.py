@@ -68,7 +68,7 @@ class CastingRequestDetail(APIView):
                 '{client} deleted this casting reqeust.'.format(client=user.first_name),
                 casting_request
             )
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({'id': int(pk)}, status=status.HTTP_200_OK)
 
 
 class CastingRequestCreate(APIView):

@@ -21,6 +21,7 @@ class TalentLanguageList(APIView):
     """
     List all languages of a user.
     """
+    @swagger_auto_schema(responses={200: TalentLanguageSerializer(many=True)})
     def get(self, request, pk, format=None):
         try:
             talent = self.get_object(pk)
@@ -33,7 +34,7 @@ class TalentLanguageList(APIView):
     """
     Reset all languages of a user.
     """
-    @swagger_auto_schema(request_body=TalentLanguageSerializer(many=True), responses={200: TalentLanguageSerializer(many=True)})
+    @swagger_auto_schema(request_body=TalentLanguageSerializer(many=True), responses={201: TalentLanguageSerializer(many=True)})
     def post(self, request, pk, format=None):
         talent = self.get_object(pk)
         data = request.data['talent_languages']

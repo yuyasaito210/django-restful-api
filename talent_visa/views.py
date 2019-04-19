@@ -8,6 +8,8 @@ from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from drf_yasg.utils import swagger_auto_schema
+
 
 class TalentVisaList(APIView):
     def get_object(self, pk):
@@ -20,6 +22,7 @@ class TalentVisaList(APIView):
     """
     List all visas of a user.
     """
+    @swagger_auto_schema(responses={200: TalentVisaSerializer(many=True)})
     def get(self, request, pk, format=None):
         try:
             talent = self.get_object(pk)
@@ -32,6 +35,7 @@ class TalentVisaList(APIView):
     """
     Reset all visa of a user.
     """
+    @swagger_auto_schema(request_body=TalentVisaSerializer(many=True), responses={201: TalentVisaSerializer(many=True)})
     def post(self, request, pk, format=None):
         talent = self.get_object(pk)
         data = request.data['talent_visas']
@@ -49,4 +53,6 @@ class TalentVisaList(APIView):
                 )
             talent_visa.save()
 
-        return Response(status=status.HTTP_201_CREATED)
+        serializer = TalentVisaSerializer(talent_visas, many=True)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
